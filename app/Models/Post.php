@@ -21,4 +21,12 @@ class Post extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function scopeFilter($query, array $filters) // Post::newQuery()->filter(), this prevent us from having to make large queries in the controller
+    {
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            $query
+                ->where('title', 'like', '%' . $search . '%')
+                ->orWhere('body', 'like', '%' . $search . '%');
+        });
+    }
 }
