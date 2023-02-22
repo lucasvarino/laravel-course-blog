@@ -10,8 +10,11 @@ class PostController extends Controller
 {
     public function index()
     {
+        // Organizing the query to improve the performance and minimize the number of consults in database
+        $posts = Post::latest()->filter(request(['search', 'category', 'author']))->with('category', 'author')->get();
+
         return view('posts.index', [
-            'posts' => Post::latest()->filter(request(['search', 'category', 'author']))->with('category', 'author')->get(),
+            'posts' => $posts
         ]);
     }
 
